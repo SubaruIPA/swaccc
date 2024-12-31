@@ -1,0 +1,56 @@
+local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/cueshut/saves/main/criminality%20paste%20ui%20library'))()
+
+-- // Window \\ --
+local window = library.new('Custom Hub by Mak', 'leadmarker')
+
+local killallturned = false
+-- // Tabs \\ --
+local tab = window.new_tab('rbxassetid://16067232823')
+
+-- // Sections \\ --
+local section = tab.new_section('Function')
+
+-- // Sector \\ --
+local sector = section.new_sector('OK', 'Left')
+
+
+local toggle = sector.element('Toggle', 'Kill All', false, function(v)
+	killallturned = not killallturned
+end)
+
+task.spawn(function()
+	while wait() do
+		if killallturned then
+			local Players = game:GetService("Players")
+			local ReplicatedStorage = game:GetService("ReplicatedStorage")
+			local hitBullet = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Remotes"):WaitForChild("hitBullet")
+
+			-- Настраиваем стандартные параметры для события
+			local targetPosition = Vector3.new(738.6372680664062, 41.168365478515625, 474.4803161621094)
+			local bulletDirection = Vector3.new(0.8052719235420227, 0, -0.5929057598114014)
+			local material = Enum.Material.Plastic
+			local cframe = CFrame.new(-0.150390625, -0.3659172058105469, -0.5, 1.0000001192092896, 0, -0.000023603439331054688, 0, 1.0000001192092896, 0, 0.000023603439331054688, 0, 1.0000001192092896)
+			local bulletId = 543632032 
+
+			local function killPlayer(player)
+				if player.Character and player.Character:FindFirstChild("Head") then
+					local args = {
+						[1] = player.Character.Head,
+						[2] = targetPosition,
+						[3] = bulletDirection,
+						[4] = material,
+						[5] = cframe,
+						[6] = bulletId
+					}
+					hitBullet:FireServer(unpack(args))
+				end
+			end
+
+			for _, player in ipairs(Players:GetPlayers()) do
+				killPlayer(player)
+			end
+
+		end
+
+	end
+end)
